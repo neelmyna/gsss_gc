@@ -243,3 +243,5 @@ GROUP BY m.id, m.name
 Required because we’re mixing an aggregate (SUM()) with normal columns (m.name).
 
 Groups all rows of transactions for that member into a single result row.
+--------------------------------------------------------
+https://github.com/neelmyna/gsss_gc
