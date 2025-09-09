@@ -131,18 +131,16 @@ END
 add_member
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_member`(
-	IN member_name VARCHAR(500),
+	IN member_name VARCHAR(100),
     IN initial_recharge_amount FLOAT,
 	IN phone_number varchar(15)
 )
 BEGIN
 DECLARE member_id INT;
-
-	/*DECLARE EXIT HANDLER FOR SQLEXCEPTION
+-- DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
         ROLLBACK;
     END;
-	*/
     START TRANSACTION;
         INSERT INTO members (name, phone) 
         VALUES (member_name, phone_number);
@@ -150,7 +148,7 @@ DECLARE member_id INT;
         -- 2. get last inserted id
         SET member_id = LAST_INSERT_ID();
 
-        -- 3. insert into guest_recharge
+        -- 3. insert into recharges
         INSERT INTO recharges (member_id, amount) 
         VALUES (member_id, initial_recharge_amount);
 

@@ -1,0 +1,317 @@
+
+
+
+
+==================================================================================================================================
+
+1.Find employees and their managers
+
+Problem: You are given an Employees table where each employee may have a manager (also in the same table).
+Write a query to list employees along with their manager’s name.
+
+Table: Employees
+
+EmpID	EmpName	ManagerID
+1	    Alice	 3
+2	    Bob	     3
+3	    Charlie	 NULL
+4	    David	 1
+
+
+SELECT e.EmpName AS Employee, m.EmpName AS Manager
+FROM Employees e
+LEFT JOIN Employees m ON e.ManagerID = m.EmpID;
+==================================================================================================================================
+2.Find pairs of employees from the same manager
+Problem: Show all employee pairs who work under the same manager.
+
+
+Table: Employees
+
+EmpID	EmpName	ManagerID
+1	    Alice	 3
+2	    Bob	     3
+3	    Charlie	 NULL
+4	    David	 1
+
+SELECT e1.EmpName AS Employee1, e2.EmpName AS Employee2, m.EmpName AS Manager
+FROM Employees e1
+JOIN Employees e2 ON e1.ManagerID = e2.ManagerID AND e1.EmpID < e2.EmpID
+JOIN Employees m ON e1.ManagerID = m.EmpID;
+==================================================================================================================================
+
+3.Find employees who joined the same year
+Problem: Each employee has a join year. Show employee pairs who joined the same year.
+
+Table: Employees
+
+EmpID	EmpName	JoinYear
+1	    Alice	2020
+2	    Bob	    2021
+3	    Charlie	2020
+4	    David	2021
+
+SELECT e1.EmpName AS Employee1, e2.EmpName AS Employee2, e1.JoinYear
+FROM Employees e1
+JOIN Employees e2 ON e1.JoinYear = e2.JoinYear AND e1.EmpID < e2.EmpID;
+
+==================================================================================================================================
+
+4.Find customers and the products they purchased
+Problem: Show all customers who made a purchase along with the product name.
+
+Customers Table                            
+
+CustomerID	CustomerName                   
+1	         Alice
+2	         Bob
+3	         Charlie
+
+Orders Table
+OrderID	CustomerID	ProductID
+101	        1	     201
+102     	2	     202
+103      	1	     203
+
+Products Table
+
+ProductID	ProductName
+201	         Laptop
+202	         Phone
+203	         Tablet
+
+SELECT c.CustomerName, p.ProductName
+FROM Customers c
+INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+INNER JOIN Products p ON o.ProductID = p.ProductID;
+==================================================================================================================================
+
+5.Find all employees and their assigned projects (if any)
+Problem: Show all employees, even if they are not assigned to any project.
+
+Employees Table
+
+EmpID	EmpName
+1	    Alice
+2	    Bob
+3	    Charlie
+
+Projects Table
+
+ProjectID	EmpID	ProjectName
+501	         1	     AI System
+502	         2	     Web App
+
+SELECT e.EmpName, p.ProjectName
+FROM Employees e
+LEFT JOIN Projects p ON e.EmpID = p.EmpID;
+==================================================================================================================================
+
+6.Show all courses and the students enrolled (if any)
+Problem: Display all courses, even if no student has enrolled.
+
+Students Table
+
+StudentID	StudentName
+  1	        Alice
+  2	        Bob
+
+Enrollments Table
+
+StudentID	CourseID
+1	         301
+
+Courses Table
+
+CourseID	CourseName
+301	        SQL
+302	        Python
+
+SELECT c.CourseName, s.StudentName
+FROM Students s
+RIGHT JOIN Enrollments e ON s.StudentID = e.StudentID
+RIGHT JOIN Courses c ON e.CourseID = c.CourseID;
+
+
+7.Find students with their enrolled courses
+Problem: Show all students who have enrolled in a course along with the course name
+
+Students Table
+
+StudentID	StudentName
+1	         Alice
+2	         Bob
+3	         Charlie
+
+
+Courses Table
+
+CourseID	CourseName
+101	        SQL
+102	        Python
+
+Enrollments Table
+
+StudentID	CourseID
+1	         101
+2	         102
+
+SELECT s.StudentName, c.CourseName
+FROM Students s
+INNER JOIN Enrollments e ON s.StudentID = e.StudentID
+INNER JOIN Courses c ON e.CourseID = c.CourseID;
+
+
+8.List all employees and their assigned projects
+Problem: Show all employees even if they don’t have any project.
+
+Employees Table
+
+EmpID	EmpName
+1	    Alice
+2	    Bob
+3	    Charlie
+
+Projects Table
+
+ProjectID	EmpID	ProjectName
+201	         1	     AI App
+202	         2	     Web App
+
+SELECT e.EmpName, p.ProjectName
+FROM Employees e
+LEFT JOIN Projects p ON e.EmpID = p.EmpID;
+
+9.Show all products and customers who ordered them
+Problem: Display all products, even if no customer has ordered them.
+
+Customers Table
+
+CustID	CustName
+1	     Alice
+2	     Bob
+
+Orders Table
+
+OrderID	CustID	ProductID
+301	      1	      501
+
+Products Table
+
+ProductID	ProductName
+501	         Laptop
+502	         Tablet
+
+SELECT p.ProductName, c.CustName
+FROM Customers c
+RIGHT JOIN Orders o ON c.CustID = o.CustID
+RIGHT JOIN Products p ON o.ProductID = p.ProductID;
+
+
+10.Find employees working in the same department
+Problem: Show employee pairs who are in the same department.
+
+Employees Table
+
+EmpID	EmpName	DeptID
+1	    Alice	 10
+2	    Bob	     10
+3	   Charlie	 20
+4	    David	 20
+
+SELECT e1.EmpName AS Employee1, e2.EmpName AS Employee2, e1.DeptID
+FROM Employees e1
+JOIN Employees e2 ON e1.DeptID = e2.DeptID AND e1.EmpID < e2.EmpID;
+
+
+
+
+
+
+==================================================================================================================================
+
+1.Create a procedure that returns all customers from a city.
+
+	DELIMITER $$
+
+	CREATE PROCEDURE GetCustomersByCity(IN city_name VARCHAR(50))
+	BEGIN
+		SELECT * FROM Customers WHERE City = city_name;
+	END $$
+
+	DELIMITER ;
+ 
+ 
+    CALL GetCustomersByCity('Mumbai');
+	
+	
+2.Given CustomerID, return how many orders they placed.
+
+	DELIMITER $$
+
+	CREATE PROCEDURE GetOrderCountByCustomer(IN cust_id INT, OUT total_orders INT)
+	BEGIN
+		SELECT COUNT(*) INTO total_orders
+		FROM Orders
+		WHERE CustomerID = cust_id;
+	END $$
+
+	DELIMITER ;
+	
+	CALL GetOrderCountByCustomer(1, @total);
+    SELECT @total;
+
+	
+3.Insert a new row into Customers using parameters.
+
+	DELIMITER $$
+
+	CREATE PROCEDURE AddCustomer(
+		IN cust_id INT,
+		IN cust_name VARCHAR(50),
+		IN cust_city VARCHAR(50),
+		IN cust_age INT
+	)
+	BEGIN
+		INSERT INTO Customers (CustomerID, Name, City, Age)
+		VALUES (cust_id, cust_name, cust_city, cust_age);
+	END $$
+
+	DELIMITER ;
+	
+	CALL AddCustomer(6, 'Frank', 'Chennai', 29);
+
+	
+4.Update a customer’s city by ID.
+
+	DELIMITER $$
+
+	CREATE PROCEDURE UpdateCustomerCity(IN cust_id INT, IN new_city VARCHAR(50))
+	BEGIN
+		UPDATE Customers
+		SET City = new_city
+		WHERE CustomerID = cust_id;
+	END $$
+
+	DELIMITER ;
+
+
+    CALL UpdateCustomerCity(3, 'Hyderabad');
+	
+5.List customers who have placed orders greater than a given amount
+
+	DELIMITER $$
+
+	CREATE PROCEDURE GetHighValueCustomers(IN min_amount DECIMAL(10,2))
+	BEGIN
+		SELECT DISTINCT c.CustomerID, c.Name, c.City, o.Amount
+		FROM Customers c
+		JOIN Orders o ON c.CustomerID = o.CustomerID
+		WHERE o.Amount > min_amount;
+	END $$
+
+	DELIMITER ;
+	
+	CALL GetHighValueCustomers(7000);
+
+
