@@ -103,8 +103,6 @@ BEGIN
     commit;
 END
 -----------------------------------------------------
-topup_wallet
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `topup_wallet`(
 	IN member_id int,
     IN recharge_amount float
@@ -118,8 +116,6 @@ BEGIN
 	END IF;
 END
 -----------------------------------------------------
-recharge_wallet
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `recharge_wallet`(
 	IN member_id int,
     IN recharge_amount FLOAT
@@ -182,33 +178,20 @@ END$$
 
 DELIMITER ;
 ------------------------------------------------------------
-CREATE DEFINER=root@localhost PROCEDURE play_game(
-    IN member_id int,
+CREATE DEFINER=`root`@`localhost` PROCEDURE `play_game`(
+	IN member_id int,
     IN game_id int
 )
 BEGIN
-    DECLARE game_amount FLOAT;
-
-    -- error handler
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
+    declare game_amount float;
     START TRANSACTION;
-
-    SELECT price INTO game_amount 
-    FROM games 
-    WHERE id = game_id;
-
-    INSERT INTO transactions(member_id, amount) 
-    VALUES(member_id, game_amount);
-
-    UPDATE members 
-    SET balance = balance - game_amount 
-    WHERE id = member_id;
-
-    COMMIT;
+	
+	select price into game_amount from games where id = game_id;
+	
+    insert into transactions(member_id, amount) values(member_id, game_amount);
+	
+    update members set balance = balance - game_amount where id = member_id;
+    commit;
 END
 ----------------------------------------------
 JOINS:
@@ -243,3 +226,7 @@ Required because we’re mixing an aggregate (SUM()) with normal columns (m.name
 Groups all rows of transactions for that member into a single result row.
 --------------------------------------------------------
 https://github.com/neelmyna/gsss_gc
+
+
+Feedback Link for Day1:
+https://forms.gle/SDqVQoL3RLeaA9ZC6

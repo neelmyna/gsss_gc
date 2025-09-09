@@ -1,0 +1,67 @@
+Steps to Download MySql:
+
+3. Download MySQL  ->  mysql.com/downloads
+-> MySQL Community GPL Downloads 
+-> MySQL Installer for Windows 
+-> No thanks start my download
+Note: Download the Latest version (8.0.3) and the Bigger Sized File (330 MB or so)
+
+Steps to Install MySQL:
+Choose Setup type as Custom -> Click Next
+MySql Server + Mysql WorkBench + MySql Shell (Drag all these to right)
+Do not select the check box -> Click Next
+Click on Execute (Make sure that all 3 Apps are visible in "Installation") -> Click Next
+Type and Networking -> Click Next
+Product Config -> click Next -> Port Number is shown -> Click Next
+Use Strong Password -> Click Next
+Set the Password (Remember it) -> Click Next
+Windows Service -> Click Next
+Server File Permissions -> Click Next
+Apply Config -> Click Execute
+Successful Message -> Click Finish 
+Product Config -> Click Next
+Installation Complete -> Click Finish
+Workbench Runs
+Go to MysQl Folder -> server folder -> bin (Add path to Environment Vars)
+
+cmd -> mysql --version
+
+mysql -u root -p   (To force the mysql to prompt for password)
+
+show databases;  // run this command
+create database db1;
+
+
+create table employees(
+	id int auto_increment primary key,
+	name varchar(50) not null,
+	designation	varchar(50),
+	phone_number bigint	unique not null,
+	commission float default(0),
+	salary float check(salary >= 15000),
+	years_of_exp tinyint,
+	location varchar(50)
+);
+
+insert into employees(name, designation, phone_number, commission, salary, years_of_exp, location) values('nithin', 'trainer', 9480273090, 35000, 185000, 16, 'mysuru');
+
+insert into employees(name, designation, phone_number, commission, salary) values('maheswaran', 'developer', 9955995599, 25000, 15000);
+
+insert into employees(name, phone_number) values('nithin',  9480272727);
+
+// employees who are working as trainers
+select * from employees where designation = 'trainer';
+
+// employees whose salary is missing
+select * from employees where salary = 'null'; // comparing with literal.
+select * from employees where salary is 'null'; // Syntax error
+select * from employees where salary is null; // Correct answer for the given question
+select * from employees where salary = null; // variable
+
+my_str == 'nithin' # RHS is literal
+my_str == nithin # RHS is variable
+
+delete * from employees;
+truncate table employees;
+drop table employees;
+
