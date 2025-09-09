@@ -1,0 +1,245 @@
+WHAT WE ARE LEARNING:
+1.ACID Properties (Transactions)
+2.DDL, DML
+3.Keys (unique, primary, foreign)
+4.Stored procedures
+5.Functions
+6.Views
+7.Triggers
+8.Index
+8.Cursors
+9.Joins
+-----------------------------------------------
+Gaming Club App:
+
+Features:
+1. add member (SP)
+2. recharge wallet (SP)
+3. 
+
+1. Create App using SPring Initializer (start.spring.io)
+2. 
+
+
+
+Gaming Club:
+
+Tables:
+members:
+	id, name, phone, balance
+recharges:
+	id, member_id -> members(id), amount, date
+transactions:
+	id, member_id -> members(id), game_id -> games(id), date
+games:
+	id, name, price, description
+collections:
+	id, amount, date
+	
+Operations:
+	1. Add member
+	2. Do recharge
+	3. Do transaction
+	4. Check collection of a specific date
+	5. CRUD on games
+	6. Search member with highest recharge
+	7. Find highest amount and the date
+-----------------------------------
+create database gaming_club;
+
+CREATE TABLE members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    balance float NOT NULL DEFAULT 0 check(balance >= 0),
+    phone VARCHAR(15) NOT NULL UNIQUE);
+    	
+CREATE TABLE games (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(20) NOT NULL UNIQUE,
+    description VARCHAR(100),
+    price float NOT NULL);
+	
+CREATE TABLE recharges (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id INT NOT NULL,
+    amount float NOT NULL CHECK (amount > 100 and amount < 20001),
+    recharge_datetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES members(id) ON UPDATE CASCADE ON DELETE CASCADE);
+  
+CREATE TABLE transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id INT NOT NULL,
+    amount float NOT NULL CHECK (amount > 0),
+    transaction_date date  DEFAULT (CURDATE()),
+    foreign key(member_id) references members(id) on update cascade on delete cascade);
+    
+CREATE TABLE collections (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    amount float NOT NULL,
+    date DATE DEFAULT (CURDATE()) unique);
+    
+drop table members;
+drop table transactions;
+drop table recharges;
+drop table collections;
+
+call add_member('nithin', 600, '9480273090');
+----------------------------------------------
+play_game
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `play_game`(
+	IN member_id int,
+    IN game_id int
+)
+BEGIN
+    declare game_amount float;
+    START TRANSACTION;
+	
+	select price into game_amount from games where id = game_id;
+	
+    insert into transactions(member_id, amount) values(member_id, game_amount);
+	
+    update members set balance = balance - game_amount where id = member_id;
+    commit;
+END
+-----------------------------------------------------
+topup_wallet
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `topup_wallet`(
+	IN member_id int,
+    IN recharge_amount float
+)
+BEGIN
+	update members set balance = balance + recharge_amount where id = member_id;
+    IF (SELECT COUNT(*) FROM collections WHERE date = CURDATE()) = 0 THEN
+		INSERT INTO collections (amount, date) VALUES (initial_recharge_amount, NOW());
+	ELSE
+		UPDATE collections SET amount = amount + recharge_amount WHERE date = CURDATE();
+	END IF;
+END
+-----------------------------------------------------
+recharge_wallet
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `recharge_wallet`(
+	IN member_id int,
+    IN recharge_amount FLOAT
+)
+BEGIN
+	INSERT INTO recharges(member_id, amount) VALUES(member_id, recharge_amount);
+END
+----------------------------------------------------
+add_member
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_member`(
+	IN member_name VARCHAR(500),
+    IN initial_recharge_amount FLOAT,
+	IN phone_number varchar(15)
+)
+BEGIN
+DECLARE member_id INT;
+
+	/*DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+        ROLLBACK;
+    END;
+	*/
+    START TRANSACTION;
+        INSERT INTO members (name, phone) 
+        VALUES (member_name, phone_number);
+
+        -- 2. get last inserted id
+        SET member_id = LAST_INSERT_ID();
+
+        -- 3. insert into guest_recharge
+        INSERT INTO recharges (member_id, amount) 
+        VALUES (member_id, initial_recharge_amount);
+
+        -- 4. update balance in members
+        UPDATE members SET balance = balance + initial_recharge_amount WHERE id = member_id;
+
+        -- 5. insert/update collections
+        IF (SELECT COUNT(*) FROM collections 
+            WHERE DATE(date) = CURDATE()) = 0 THEN
+
+            INSERT INTO collections (amount, date) 
+            VALUES (initial_recharge_amount, NOW());
+
+        ELSE
+            UPDATE collections SET amount = amount + initial_recharge_amount WHERE date = CURDATE();
+        END IF;
+    COMMIT;
+END
+-----------------------------------------------------
+trigger example
+
+DELIMITER $$
+
+CREATE TRIGGER tr_topup_wallet
+AFTER INSERT ON recharges
+FOR EACH ROW
+BEGIN
+    -- Call your procedure using values from the new row
+    CALL topup_wallet(NEW.member_id, NEW.amount);
+END$$
+
+DELIMITER ;
+------------------------------------------------------------
+CREATE DEFINER=root@localhost PROCEDURE play_game(
+    IN member_id int,
+    IN game_id int
+)
+BEGIN
+    DECLARE game_amount FLOAT;
+
+    -- error handler
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    SELECT price INTO game_amount 
+    FROM games 
+    WHERE id = game_id;
+
+    INSERT INTO transactions(member_id, amount) 
+    VALUES(member_id, game_amount);
+
+    UPDATE members 
+    SET balance = balance - game_amount 
+    WHERE id = member_id;
+
+    COMMIT;
+END
+----------------------------------------------
+JOINS:
+
+Find the Member (name) who has spent the maximum amount while playing the games:
+
+SELECT m.name, 
+	COALESCE(SUM(t.amount), 0) AS total_transaction_amount
+FROM members m 
+LEFT JOIN transactions t ON m.id = t.member_id
+WHERE m.id = 2 GROUP BY m.id, m.name;
+
+Explanation:
+FROM members m 
+LEFT JOIN transactions t ON m.id = t.member_id
+
+For each row in members, MySQL tries to find matching rows in transactions.
+
+If a member has transactions, those rows are joined.
+If a member has no transactions, you still get the member row — but all t.* columns are NULL.
+So this guarantees the member appears even if they never made a transaction.
+
+WHERE m.id = 2
+
+Only the member with id = 2 will be considered.
+If no member with id = 2 exists → the query returns zero rows.
+
+GROUP BY m.id, m.name
+
+Required because we’re mixing an aggregate (SUM()) with normal columns (m.name).
+
+Groups all rows of transactions for that member into a single result row.
