@@ -1,0 +1,674 @@
+REACT NOTES FREECODECAMP:
+
+CONTENT:
+Components
+Hooks
+State Management
+Routing
+React Query
+Authentication
+Error Handling
+Performance Optimization
+React Redux
+
+React takes care of efficiently creating and updating the DOM, via simple and reusable components.
+Componets are easy to create and use, they are modular and well organised.
+The components are built and organised into a Tree structure and the Root Component is the App.
+
+STATIC PAGES IN REACT (00:05:36)
+1ST LEARN HOW TO THINK IN REACT!
+
+It was 1st released in 2013 by Jordan Walke.
+Proprietary React syntax is JSX
+Custom Components
+Styling (CSS)
+Build a React info site:
+
+--------------------------------------------------------
+REACT JS
+Content of the page is component.
+Switching between components is called as Routing
+
+The 3 Componenets we are desinging are:
+1. List page
+2. Edit Page
+3. Create Page
+
+Installation of Node:
+Commands:
+node: It is used to run the JS programs/files. It is similar to python CLI.
+npm: It is the Node Package manager. It is similar to pip CLI.
+
+npx: The CLI that helps us to create a React App
+Command is:
+
+To download git:
+https://git-scm.com/downloads
+
+$ npm init
+This command is not required. It will be done automatically by npx later.
+
+$ npm install -g create-react-app
+This command has to be run only once. For all new Apps, we need not have to run this.
+
+$npx create-react-app mobileapp
+This command creates a new App with required folder structure along with required packages. We must run this command when ever we wish to create every App.
+
+ npm start
+    Starts the development server.
+
+  npm run build
+    Bundles the app into static files for production.
+
+  npm test
+    Starts the test runner.
+
+  npm run eject
+    Removes this tool and copies build dependencies, configuration files
+    and scripts into the app directory. If you do this, you can’t go back!
+
+We suggest that you begin by typing:
+  cd mobileapp
+  npm start
+
+WE have to explicitly install:
+1. react-router-dom
+2. axios
+Command is:
+npm install react-router-dom axios
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+In VS Code, under the SRC folder, create 3 JS files
+mobile-create.js
+mobile-edit.js
+mobile-list.js
+
+React developes single page App. The Componenets are switched which gives us different views.
+These components may have nested components (Hierarchical)
+The 3 components will have switch for other 1 or 2 components.
+Thus at a time, we view only one component.
+From parent component to child we can send properties.
+Child to parent component we pass EVENTS.
+
+Component will have props and state and the UI.
+The UI is defined inside the render method using the return.
+This UI is the HTML, but it is not normal HTML, rather it is JSX (JS XML).
+
+The tags we use in the JSX are components of the React.
+React will manipulate the browser dom.
+-----------------------------------------------------
+import { react } from ....
+// Here we are accessing a specific element from an object
+
+import [ react ] from ....
+// Here we are accessing a specific element from an Array
+
+//Program1
+let numbers = [1, 3, 5]
+let [num1, num2, num3] = numbers // DeStructuring (i.e. Unpacking an Array)
+// Here we copied elements of the array into 3 independent variables.
+console.log(num1, num2, num3, numbers)
+-----------------------------------
+let numbers2 = [11, 13, 17, 19]
+let [num4, num5] = numbers2
+console.log(num4, num5, numbers2)
+-------------------------------
+let myName = 'Nithin'
+console.log(`My Name is ${myName}. And I am a Trainer`)
+----------------------------------
+numbers = [11, 13, 17, 19]
+for(number of numbers)
+    console.log(number, end= ' ')
+-------------------------
+let trainer = {trainerName: 'Nithin', subject: 'MERN'}
+let {subject, trainerName} = trainer // Note that we must give attribute names as it is.
+
+console.log(subject, trainerName, trainer)
+-----------------------
+//Program7
+let trainer2 = {trainerName: 'Nithin', subject: 'MERN', address:{doorNum: 501, city:'Mysuru', pin: 570011} }
+console.log(trainer2)
+
+let {trainerName, subject, address} = trainer2
+console.log(trainerName)
+console.log(subject)
+console.log(address)
+let {doorNum, city, pin} = trainer2.address
+console.log(doorNum)
+console.log(city)
+console.log(pin)
+----------------------------
+let frequencies = [ [10, 3], [20, 2], [30, 1] ]
+for([number, frequency] of frequencies)
+    console.log(`${number} occured ${frequency} times`)
+--------------------------
+let students = [{studID: 101, score:90}, {studID: 104, score:93}, {studID: 103, score:85}]
+
+totalScore = 0
+for (let {score} of students){
+    totalScore += score
+}
+console.log(`Total Score = ${totalScore}`)
+---------------------------------------------------
+// Program3
+let even = [10,20,30]
+let odd = [11, 21, 31]
+let all = []
+for(let e of even){
+    all.push(e)
+}
+for(let e of odd){
+    all.push(e)
+}
+
+console.log(even,odd,all)
+
+let nums = even
+even [1] = 60
+console.log(nums,even)
+
+let another = [...even] //copies of the existing array
+even[2] = 90
+console.log(even,nums,another)
+
+another = [...another, ...odd] // 'another' array is recreated and added all elements of 'odd' array as well
+-----------------------------------------------
+REACT NOTES:
+node:
+-> It is is the CLI that is used to run JS programs/Files.
+-> node is the environment on which ReactApp run.
+To install node:
+download and install from internet (nodejs.org)
+Windows Installer or ZIP file.
+
+npm:
+node package manager. It is a CLI that is used to download and manage the packages required.
+
+To Install npm:
+It is instaled when we install node.
+
+To Create a React App:
+$ npx create-react-app <app-name>
+// The above command is the new one
+
+$ npm create-react-app <app-name>
+// The above command is the older one
+
+The above command downloads the required packages/dependencies and also the folder structure is maintained.
+The parent folder will be the project folder with the app-name we mentioned.
+
+$ cd learn-app
+// Go inside the Project folder to access it.
+
+$ npm start
+To Run/Start the project/App
+
+index.js is the primary file. It is the starting point of the App.
+It has App component. It is implemented in app.js
+And App.js is one of the default component.
+<We usually remove this and put our code in its place.>
+
+<React.StrictMode>
+It is the browser based React component. Most the code which is React Framework based.
+It gives the entire body of the HTML of the page.
+
+ReactDOM is the Entire Tree of the Body Tag. Thus it is in the global scope.
+And root within the body is the div tag.
+Within the root the <React.StrictMode> is rendered.
+And the root is defined in the index.html
+------------------------------------
+program1:
+
+function App() {
+  return (
+    <div className="App">
+      <h2>
+        React Program One
+      </h2>
+      <p>
+        Starts with index.html
+        index.js and app.js are the framework tools that gives us bundle.js and in the browser index.html linked with bundle.js is rendered.
+      </p>
+    </div>
+  );
+}
+export default App;
+---------------------------------------
+Program2: HelloWorld.js
+
+function HelloWorld () {
+  return (
+    <p style={{color:"blue", fontSize:"40px" } }>
+      Child App Content
+    </p>
+  )
+}
+export default HelloWorld;
+--------------------------------
+function App () {
+  return (
+    <p>
+      Parent App Content
+    </p>
+	<HelloWorld> </HelloWorld>
+	// <HelloWorld/>
+  )
+}
+export default HelloWorld;
+-----------------------------------------
+-> As we know that the index.js is the entry point of the React-App, In this, we are adding the App component.
+-> Now, every Component is implemented using code and the Code for every component is as usually is put into a file and in React it is JS file.
+-> The code is implemented either in a Function called as Functional component, alternatively it is implemneted using a class called as class component.
+-> If we wish to add styling, then external css file can be linked using import stmt. For example:
+import './App.css';
+Here, note that the path is mentioned in single quotes. The DOT represents PWD.
+-> Note that for the component to be used by other components, we must export it.
+-> One JS file can have multiple components(functions or classes). However, only one component can be exported as default. In other words, if we use default in export statement, only one component can be exported.
+-> To export multiple components, we must bind them in braces. In this case the export cannot be default.
+-> We can directly mention the export and export default right at definition of the function/class.
+NOTE:
+Install the extension: ES7 + React/Redux/React-Native snippets
+Author: dsznajder
+----------------------------
+.para {
+   background-color: blue;
+   border-radius: 2px;
+   border: 2px dashed pink;
+  /* HOVER OFF */
+   -webkit-transition: padding 2s;
+}
+
+.para {
+   background-color: black;
+   border-radius: 8px;
+   border: 2px solid red;
+  /* HOVER ON */
+   -webkit-transition: border-radius 2s;
+}
+---------------------------------------
+constructor(props)
+props here is properties. It is a JSON object. It has values to the component.
+------------------------------------
+import { Component } from 'react';
+
+export deafult class AnimalLover extends Component {  
+    render() {
+    return (
+      <h2> 
+            I am Animal Lover
+      </h2>
+    )
+  }
+}
+----------------------------------
+export default class IncrementCounter extends Component {
+    constructor (props) {
+        super(props)
+        this.state = {count:10}
+        this.doCount = this.doCount.bind(this)
+    }
+    incrementCount () {
+        this.setState({countNum: this.state.count + 1})    
+    }
+    render () {
+        return (
+        <div>
+            <h2> I am Animal Lover </h2>
+            <input type="button" value={this.state.countNum} onClick={this.incrementCount} />
+        </div>
+          )
+    }
+}
+------------------------------
+import { Component } from "react";
+
+export class Trainer extends Component {
+    constructor(props) {
+        super(props);       
+        this.state = {trainerList: [{id: 101, name:'Nithin', technology:'MERN', location:'Mysuru'}, {id: 102, name:'Maheswaran', technology:'MEAN', location:'Tiruchirapalli'} ] }
+    }
+    render () {
+        let fnEachTrainer = (trainer) => {
+            return <tr>
+                <td> {trainer.id} </td>
+                <td> {trainer.name} </td>
+                <td> {trainer.technology} </td>
+                <td> {trainer.location} </td>    
+            </tr>;
+        };
+
+        let trainerRows = this.state.trainerList.map(fnEachTrainer);
+        return (
+            <>
+                <div className="myTopDiv">
+                    <h2> Trainers List </h2>
+                    <input type="button" id="add" value="Add Trainer"/>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            <th> ID </th>
+                            <th> Name </th>
+                            <th> Technology </th>
+                            <th> Location </th>
+                        </tr>
+                        {trainerRows}
+                    </table>
+                </div>
+            </>
+        )
+    }
+}
+----------------------------------------------------------
+Shapes.js
+
+import { Component } from "react";
+
+export class Square extends Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return(
+            <div class="square"></div>
+        )
+    }
+}
+
+export class CornerCurvedSquare extends Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return(
+            <div class="corner-curved-square"></div>
+        )
+    }
+}
+
+export class Circle extends Component{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        return(
+            <div class="circle"></div>
+        )
+    }
+}
+----------------
+App.js Code:
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
+import { Circle, CornerCurvedSquare, Square } from './Shapes';
+
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <div>
+          <a href="/square">Square</a> 
+           <a href="/circle">Circle</a>
+           <a href="/curve-square">Curved-Square</a>
+        </div>
+          <Routes>
+            <Route path="/" element={<Square/>} />
+            <Route path="/square" element={<Square/>} />
+            <Route path="/circle" element={<Circle/>} />
+            <Route path="/curve-square" element={<CornerCurvedSquare/>} />
+          </Routes>
+      </BrowserRouter>
+    </div>
+  );
+}
+
+export default App;
+---------------------------------
+shapes.css
+.square {
+	width: 400px;
+	height: 400 px;
+	border: 2px solid brown;
+	background-color: cyan;
+}
+.cornerCurvedsquare {
+	width: 400px;
+	height: 400 px;
+	border: 2px solid brown;
+	background-color: cyan;
+	border-radius: 3px;
+}
+.cornerCurvedsquare {
+	width: 400px;
+	height: 400 px;
+	border: 2px solid brown;
+	background-color: cyan;
+	border-radius: 50px;
+}
+----------------------------------------------------------
+GenericStudent.js
+
+import { Component } from "react";
+
+export default class GenericStudent extends Component{
+    constructor(props){
+        super(props);
+        this.state = {id: props.id, 
+            name: props.name, 
+            mark1: props.mark1, 
+              : props.mark2};
+    }
+    onNameChange = (e) => {        
+        this.setState({name: e.target.value})
+    }
+    onIdChange = (e) => {        
+        this.setState({id: parseInt(e.target.value)})
+    }
+    onMark1Change = (e) => {        
+        this.setState({mark1: parseInt(e.target.value)})
+    }
+    onMark2Change = (e) => {        
+        this.setState({mark2: parseInt(e.target.value)})
+    }
+    render(){
+        return(
+            <>
+            <table width="100%"><tr><td>
+            <div>
+                <div style={{border:'2px solid green', 
+                        backgroundColor:'brown',
+                        color:'white'}}><h3>Edit Student</h3></div>
+                <div>
+                    <label forName="name">Name:</label>
+                    <input type="text" value={this.state.name}
+                        id="name"
+                        onChange={this.onNameChange}/>
+                </div>
+                <div>
+                    <label forName="id">ID:</label>
+                    <input type="text" value={this.state.id}
+                        id="id"
+                        onChange={this.onIdChange}/>
+                </div>
+                <div>
+                    <label forName="mark1">Mark 1:</label>
+                    <input type="text" value={this.state.mark1}
+                        id="mark1"
+                        onChange={this.onMark1Change}/>
+                </div>
+                <div>
+                    <label forName="mark2">Mark 2:</label>
+                    <input type="text" value={this.state.mark2}
+                        id="mark2"
+                        onChange={this.onMark2Change}/>
+                </div>
+            </div>
+            </td>
+			
+			<td>
+            <div>
+                <div style={{border:'2px solid green', 
+                        backgroundColor:'brown',
+                        color:'white'}}><h3>View Student</h3></div>
+                <div>
+                    <label>Name:</label>
+                    {this.state.name}
+                </div>
+                <div>
+                    <label>ID:</label>
+                    {this.state.id}
+                </div>
+                <div>
+                    <label>Mark 1:</label>
+                    {this.state.mark1}
+                </div>
+                <div>
+                    <label>Mark 2:</label>
+                    {this.state.mark2}
+                </div>
+                <div>
+                    <label>Total:</label>
+                    {this.state.mark1 + this.state.mark2}
+                </div>
+            </div>  
+            </td></tr></table>
+            </>
+        )
+    }
+}
+
+export  class ContainerStudent extends Component{
+    constructor(props){
+        super(props);
+        this.state = {id: props.id, 
+            name: props.name, 
+            mark1: props.mark1, 
+            mark2: props.mark2};
+    }
+    onStudentChange = (dataCode, data) => {
+        switch(dataCode){
+            case 1: this.setState({id: data}); break;
+            case 2: this.setState({name: data}); break;
+            case 3: this.setState({mark1: data}); break;
+            case 4: this.setState({mark2: data}); break;
+        } 
+    }
+    
+    render(){
+        return(
+            <>
+            <table width="100%"><tr>
+            <td>
+                <EditStudent id={this.state.id}
+                    name={this.state.name}
+                    mark1={this.state.mark1}
+                    mark2={this.state.mark2}
+                    onStudentChange={this.onStudentChange} />
+            </td>
+            <td>                
+                <ViewStudent id={this.state.id}
+                    name={this.state.name}
+                    mark1={this.state.mark1}
+                    mark2={this.state.mark2} />              
+            </td></tr></table>
+            </>
+        )
+    }
+}
+
+export  class EditStudent extends Component{
+    constructor(props){
+        super(props);       
+    }
+    onNameChange = (e) => {        
+        this.props.onStudentChange(2,e.target.value)
+    }
+    onIdChange = (e) => {        
+        this.props.onStudentChange(1,parseInt(e.target.value))
+    }
+    onMark1Change = (e) => {        
+        this.props.onStudentChange(3,parseInt(e.target.value))
+    }
+    onMark2Change = (e) => {        
+        this.props.onStudentChange(4,parseInt(e.target.value))
+    }
+    render(){
+        return(
+            <>          
+            <div>
+                <div style={{border:'2px solid green', 
+                        backgroundColor:'brown',
+                        color:'white'}}><h3>Edit Student</h3></div>
+                <div>
+                    <label forName="name">Name:</label>
+                    <input type="text" value={this.props.name}
+                        id="name"
+                        onChange={this.onNameChange}/>
+                </div>
+                <div>
+                    <label forName="id">ID:</label>
+                    <input type="text" value={this.props.id}
+                        id="id"
+                        onChange={this.onIdChange}/>
+                </div>
+                <div>
+                    <label forName="mark1">Mark 1:</label>
+                    <input type="text" value={this.props.mark1}
+                        id="mark1"
+                        onChange={this.onMark1Change}/>
+                </div>
+                <div>
+                    <label forName="mark2">Mark 2:</label>
+                    <input type="text" value={this.props.mark2}
+                        id="mark2"
+                        onChange={this.onMark2Change}/>
+                </div>
+            </div>
+            </>
+        )
+    }
+}
+
+export  class ViewStudent extends Component{
+    constructor(props){
+        super(props);     
+    }
+    
+    render(){
+        return(
+            <>   
+            <div>
+                <div style={{border:'2px solid green', 
+                        backgroundColor:'brown',
+                        color:'white'}}><h3>View Student</h3></div>
+                <div>
+                    <label>Name:</label>
+                    {this.props.name}
+                </div>
+                <div>
+                    <label>ID:</label>
+                    {this.props.id}
+                </div>
+                <div>
+                    <label>Mark 1:</label>
+                    {this.props.mark1}
+                </div>
+                <div>
+                    <label>Mark 2:</label>
+                    {this.props.mark2}
+                </div>
+                <div>
+                    <label>Total:</label>
+                    {this.props.mark1 + this.props.mark2}
+                </div>
+            </div>  
+            
+            </>
+        )
+    }
+}
+

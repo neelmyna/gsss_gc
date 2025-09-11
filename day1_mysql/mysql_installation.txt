@@ -64,4 +64,3 @@ my_str == nithin # RHS is variable
 delete * from employees;
 truncate table employees;
 drop table employees;
-
