@@ -315,3 +315,10 @@ JOIN Employees e2 ON e1.DeptID = e2.DeptID AND e1.EmpID < e2.EmpID;
 	CALL GetHighValueCustomers(7000);
 
 
+
+
+day3 feedback link:
+https://forms.gle/Fk9TAnDUkA89pmFR7
+
+ReactJS Day3 Test Link:
+https://forms.gle/9A6zfswZSHG4RmYQ8
